@@ -599,6 +599,17 @@ def main():
             cmd_haunt(ai)
         elif subcmd == "exorcise":
             cmd_exorcise()
+        elif subcmd == "whisper":
+            whisper = ai._offline_spectral_whisper("whisper", 0, "")
+            print(f"\n{Style.WITCH_PURPLE}👻 [Phantom Whisper]{Style.RESET} {Style.ITALIC}{Style.SPECTRAL_CYAN}{whisper}{Style.RESET}\n")
+        elif subcmd == "web":
+            web_file = SCRIPT_DIR / "web_ofrenda.html"
+            if web_file.exists():
+                print(f"\n{Style.SPECTRAL_CYAN}🕸️  Opening the Web Ofrenda & Séance in your browser:{Style.RESET}")
+                print(f"   {Style.BOLD}file://{web_file}{Style.RESET}\n")
+                subprocess.run(["xdg-open", str(web_file)], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            else:
+                print(f"{Style.BLOOD_RED}web_ofrenda.html not found.{Style.RESET}")
         elif subcmd in ("help", "--help", "-h"):
             print(BANNER)
             print_help()
