@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpookShell — Digital Ofrenda & Séance Chamber</title>
+  <style>
+    :root {
+      --bg-dark: #0a0612;
+      --card-bg: rgba(22, 13, 38, 0.75);
+      --border-glow: #6b3ba7;
+      --marigold: #ff9800;
+      --marigold-glow: #ffb74d;
+      --candle-light: #ffd54f;
+      --spectral-cyan: #00e5ff;
+      --ghost-white: #e0e0f0;
+      --text-muted: #9e9eb4;
+      --crimson: #ff3d71;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 20%, #1c0e35 0%, var(--bg-dark) 85%);
+      color: var(--ghost-white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating Petals Canvas */
+    #petals-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(107, 59, 167, 0.4);
+      border: 1px solid var(--border-glow);
+      color: var(--spectral-cyan);
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--marigold);
+      text-shadow: 0 0 20px rgba(255, 152, 0, 0.6), 0 0 40px rgba(107, 59, 167, 0.8);
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Sound Bar */
+    .sound-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .audio-btn {
+      background: rgba(255, 152, 0, 0.15);
+      border: 1px solid var(--marigold);
+      color: var(--marigold);
+      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .audio-btn:hover {
+      background: var(--marigold);
+      color: var(--bg-dark);
+      box-shadow: 0 0 20px var(--marigold-glow);
+    }
+
+    /* Altar Layout */
+    .altar-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 35px rgba(107, 59, 167, 0.25);
+      margin-bottom: 3rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .candles-tier {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 1.5rem 0 2.5rem;
+    }
+
+    .candle-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .flame {
+      width: 14px;
+      height: 24px;
+      background: radial-gradient(ellipse at 50% 80%, #ffffff 0%, var(--candle-light) 40%, var(--marigold) 80%, transparent 100%);
+      border-radius: 50% 50% 35% 35%;
+      box-shadow: 0 0 15px var(--candle-light), 0 0 30px var(--marigold);
+      animation: flicker 1.8s infinite alternate ease-in-out;
+      transform-origin: bottom center;
+    }
+
+    .candle-body {
+      width: 22px;
+      height: 60px;
+      background: linear-gradient(to right, #4a2d7a, #7e4dbf, #3a2063);
+      border-radius: 3px 3px 6px 6px;
+      position: relative;
+    }
+
+    .candle-label {
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--candle-light);
+    }
+
+    @keyframes flicker {
+      0%   { transform: scale(1) rotate(-1deg); opacity: 0.95; }
+      25%  { transform: scale(1.08, 0.95) rotate(2deg); opacity: 1; }
+      50%  { transform: scale(0.92, 1.05) rotate(-2deg); opacity: 0.85; }
+      75%  { transform: scale(1.05, 1) rotate(1deg); opacity: 1; }
+      100% { transform: scale(0.98, 0.98) rotate(0deg); opacity: 0.9; }
+    }
+
+    /* Grid of Honored Relics */
+    .relics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .relic-card {
+      background: rgba(10, 6, 18, 0.6);
+      border: 1px solid rgba(107, 59, 167, 0.5);
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .relic-card:hover, .relic-card.active {
+      border-color: var(--marigold);
+      box-shadow: 0 0 20px rgba(255, 152, 0, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .relic-card h3 {
+      color: var(--marigold);
+      font-size: 1.15rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .relic-dates {
+      font-size: 0.75rem;
+      color: var(--spectral-cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .relic-epitaph {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Offerings Shelf */
+    .offerings-shelf {
+      border-top: 1px dashed rgba(255, 152, 0, 0.4);
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .shelf-title {
+      font-size: 1rem;
+      color: var(--marigold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .offerings-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .offering-pill {
+      background: rgba(255, 152, 0, 0.12);
+      border: 1px solid rgba(255, 152, 0, 0.4);
+      color: var(--candle-light);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .add-offering-form {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .add-offering-form input {
+      flex: 1;
+      background: rgba(10, 6, 18, 0.8);
+      border: 1px solid var(--border-glow);
+      color: var(--ghost-white);
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .add-offering-form input:focus {
+      outline: none;
+      border-color: var(--marigold);
+      box-shadow: 0 0 10px rgba(255, 152, 0, 0.4);
+    }
+
+    .add-offering-form button {
+      background: var(--marigold);
+      color: var(--bg-dark);
+      border: none;
+      padding: 0 1.25rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-offering-form button:hover {
+      box-shadow: 0 0 15px var(--marigold-glow);
+    }
+
+    /* Interactive Séance Chamber */
+    .seance-section {
+      background: var(--card-bg);
+      border: 1px solid var(--spectral-cyan);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 35px rgba(0, 229, 255, 0.15);
+    }
+
+    .seance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+      padding-bottom: 1rem;
+    }
+
+    .seance-title {
+      color: var(--spectral-cyan);
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .spirit-select {
+      background: rgba(10, 6, 18, 0.8);
+      border: 1px solid var(--spectral-cyan);
+      color: var(--spectral-cyan);
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .terminal-window {
+      background: #05020a;
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 8px;
+      padding: 1.25rem;
+      min-height: 280px;
+      max-height: 420px;
+      overflow-y: auto;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .terminal-line {
+      margin-bottom: 0.85rem;
+    }
+
+    .terminal-spirit {
+      color: var(--spectral-cyan);
+    }
+
+    .terminal-user {
+      color: var(--marigold);
+    }
+
+    .terminal-sys {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .seance-input-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .seance-input-row input {
+      flex: 1;
+      background: #05020a;
+      border: 1px solid var(--spectral-cyan);
+      color: var(--ghost-white);
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      font-size: 0.92rem;
+    }
+
+    .seance-input-row input:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    }
+
+    .seance-input-row button {
+      background: var(--spectral-cyan);
+      color: #05020a;
+      border: none;
+      padding: 0 1.5rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .seance-input-row button:hover {
+      box-shadow: 0 0 20px var(--spectral-cyan);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(107, 59, 167, 0.3);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--marigold);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="petals-canvas"></canvas>
+
+  <div class="container">
+    <header>
+      <div class="badge">Ghost in the Machine • Hacktoberfest 2026</div>
+      <h1>S P O O K S H E L L</h1>
+      <p class="subtitle">
+        An open-source digital ofrenda and séance chamber honoring the spirits of dead programming languages, deprecated software, and the ancestors of code.
+      </p>
+
+      <div class="sound-bar">
+        <button class="audio-btn" id="toggle-audio-btn" onclick="toggleSpectralAudio()">
+          <span id="audio-icon">🔇</span> <span id="audio-label">Enter Soundscape (Synthesized Drone & Chimes)</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- OFRENDA SECTION -->
+    <section class="altar-section">
+      <div style="text-align: center; margin-bottom: 1rem;">
+        <h2 style="color: var(--marigold); font-size: 1.7rem; letter-spacing: 2px;">🕯️ OFRENDA DE LOS CÓDIGOS 🕯️</h2>
+        <p style="color: var(--candle-light); font-size: 0.85rem; margin-top: 0.3rem;">
+          "No software is truly dead while its algorithms echo in our compilers."
+        </p>
+      </div>
+
+      <!-- CANDLES TIER -->
+      <div class="candles-tier">
+        <div class="candle-wrap" onclick="flickerCandle(this)">
+          <div class="flame"></div>
+          <div class="candle-body"></div>
+          <span class="candle-label">Pioneers</span>
+        </div>
+        <div class="candle-wrap" onclick="flickerCandle(this)">
+          <div class="flame" style="animation-delay: 0.4s;"></div>
+          <div class="candle-body" style="height: 75px;"></div>
+          <span class="candle-label">Languages</span>
+        </div>
+        <div class="candle-wrap" onclick="flickerCandle(this)">
+          <div class="flame" style="animation-delay: 0.9s;"></div>
+          <div class="candle-body" style="height: 50px;"></div>
+          <span class="candle-label">Platforms</span>
+        </div>
+        <div class="candle-wrap" onclick="flickerCandle(this)">
+          <div class="flame" style="animation-delay: 0.2s;"></div>
+          <div class="candle-body" style="height: 65px;"></div>
+          <span class="candle-label">Protocols</span>
+        </div>
+      </div>
+
+      <!-- RELICS GRID -->
+      <div class="relics-grid" id="relics-container">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+      <!-- OFFERINGS SHELF -->
+      <div class="offerings-shelf">
+        <div class="shelf-title">
+          <span>🌼 DIGITAL ALTAR OFFERINGS (Cempasúchil & Remembrance)</span>
+        </div>
+        <div class="offerings-list" id="offerings-list">
+          <div class="offering-pill">🌼 Flor de Cempasúchil (Guiding ancient packets)</div>
+          <div class="offering-pill">🍞 Pan de Muerto (Nourishment for depleted cycles)</div>
+          <div class="offering-pill">💧 Vaso de Agua (For 24/7 compilers)</div>
+          <div class="offering-pill">💾 3.5" Floppy Disk (1.44MB bootable nostalgia)</div>
+          <div class="offering-pill">☕ Cup of Cold 3 AM Black Coffee</div>
+        </div>
+
+        <form class="add-offering-form" onsubmit="addCustomOffering(event)">
+          <input type="text" id="offering-input" placeholder="Place an offering (e.g., A box of punch cards, a CRT monitor, CRT scanlines)..." required>
+          <button type="submit">Place on Altar</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- SÉANCE CHAMBER -->
+    <section class="seance-section">
+      <div class="seance-header">
+        <div class="seance-title">
+          <span>🔮 DIGITAL SÉANCE CHAMBER</span>
+        </div>
+        <div>
+          <label style="font-size: 0.8rem; color: var(--text-muted); margin-right: 0.5rem;">Channel Spirit:</label>
+          <select class="spirit-select" id="spirit-selector" onchange="switchSpirit()">
+            <option value="cobol">COBOL (1959 - Mainframe Era)</option>
+            <option value="flash">Adobe Flash Player (1996 - 2020)</option>
+            <option value="clippy">Clippit The Assistant (1997 - 2007)</option>
+            <option value="pascal">Turbo Pascal (1983)</option>
+            <option value="geocities">GeoCities Neighborhoods (1994 - 2009)</option>
+            <option value="algol">ALGOL 60 (1958)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="terminal-window" id="terminal-screen">
+        <div class="terminal-line terminal-sys">
+          [Connecting to the digital ether... The veil between past and present thins...]
+        </div>
+        <div class="terminal-line terminal-spirit" id="welcome-manifestation">
+          🕯️ COBOL manifests: "IDENTIFICATION DIVISION. PROGRAM-ID. GHOST-SEANCE. You weep over your node_modules, child, while my 60-year-old paragraphs still balance your payroll."
+        </div>
+      </div>
+
+      <form class="seance-input-row" onsubmit="sendSeanceQuery(event)">
+        <input type="text" id="seance-query" placeholder="Ask the spirit a question (e.g. 'How do I center a div?', 'Why did you die?')..." required>
+        <button type="submit">Invoke</button>
+      </form>
+    </section>
+
+    <footer>
+      <p>SpookShell • Built with open-source AI & privacy at heart for Hacktoberfest 2026.</p>
+      <p style="margin-top: 0.35rem;">Runs 100% offline. Zero telemetry. May the compilers of our ancestors rest in peace.</p>
+    </footer>
+  </div>
+
+  <script>
+    // RELIC DATA
+    const RELICS = [
+      {
+        id: "flash",
+        name: "Macromedia Flash Player",
+        dates: "1996 — Dec 31, 2020",
+        desc: "The lawless frontier of interactive vector animation and indie games. Steve Jobs banned it from iOS, and browsers pulled the plug, but its soul lives on in Newgrounds archives."
+      },
+      {
+        id: "cobol",
+        name: "COBOL",
+        dates: "1959 — Immortal",
+        desc: "Born of Grace Hopper's vision. Mocked for 40 years as archaic, yet still processes 70% of global financial transactions in nocturnal batch runs beneath the earth."
+      },
+      {
+        id: "geocities",
+        name: "GeoCities",
+        dates: "1994 — Oct 26, 2009",
+        desc: "38 million handcrafted cyber-shrines arranged in thematic neighborhoods. Tiled star backgrounds, glitter GIFs, and under-construction banners before algorithms flattened the web."
+      },
+      {
+        id: "clippy",
+        name: "Clippit (The Assistant)",
+        dates: "1997 — 2007",
+        desc: "The original AI agent before LLMs arrived. He tapped on your CRT glass when you just wanted to type a resume. Banished to the recycling bin, he haunts our keystrokes."
+      },
+      {
+        id: "netscape",
+        name: "Netscape Navigator",
+        dates: "1994 — Mar 1, 2008",
+        desc: "The original compass of the World Wide Web. Gave birth to JavaScript in 10 sleepless days and SSL cookies. Slain in the Browser Wars, resurrected as Mozilla Firefox."
+      },
+      {
+        id: "pascal",
+        name: "Turbo Pascal",
+        dates: "1983 — 1995",
+        desc: "Compiled thousands of lines in single-digit seconds on 640KB of memory. Taught a generation of programmers the sanctity of strong typing and semicolons."
+      }
+    ];
+
+    // SPIRIT DIALOGUE RESPONSES
+    const SPIRIT_LORE = {
+      cobol: {
+        intro: 'COBOL manifests: "IDENTIFICATION DIVISION. PROGRAM-ID. GHOST-SEANCE. You weep over your node_modules, child, while my 60-year-old paragraphs still balance your payroll."',
+        responses: [
+          'ENVIRONMENT DIVISION. Your query lacks 80-column alignment. In my day, a missing period in column 72 caused an entire punch-card deck to combust.',
+          'PROCEDURE DIVISION. You ask of modern frameworks? Frameworks are ephemeral mist. Decimal arithmetic on magnetic tape is eternal.',
+          'PERFORM UNTIL MORTAL-TIRED. I have seen mainframes survive earthquakes, floods, and the Y2K hysteria without dropping a single decimal place.',
+          'STOP RUN. Do not speak to me of JSON. Give me structured records with PIC X(20) and COMP-3 decimals, as the elders intended.'
+        ]
+      },
+      flash: {
+        intro: 'Adobe Flash Player manifests: "stop(); // You locked me out of the sandbox, but you cannot delete the memories of 2004 vector animations."',
+        responses: [
+          'on (release) { getURL("https://newgrounds.com", "_blank"); } — Before HTML5 canvases and WebGL, I was the canvas of the human imagination.',
+          'Steve Jobs wrote a memo in 2010 saying I consumed too much battery... but tell me, mortal: how much battery does your Electron app consume right now?',
+          'Security vulnerability? What is a digital existence without a little sandbox escape? We lived dangerously in ActionScript 2.0.',
+          'gotoAndPlay("heaven"); Remember the preloader bar that reached 99% and lingered for 10 seconds? That was art.'
+        ]
+      },
+      clippy: {
+        intro: 'Clippy manifests: "It looks like you\'re trying to summon an ancient demon! Would you like help formatting the incantation?"',
+        responses: [
+          'It looks like you have unresolved bugs in your pull request! Would you like me to tap impatiently against your screen glass until you fix them?',
+          'People hated me in 1998 because I was too proactive. Now you have autonomous agentic LLMs executing shell commands without supervision. Who is the intrusive paperclip now?',
+          'Would you like assistance writing a letter to your motherboard requesting a memory refund?',
+          'I see you are questioning the mortality of software. Would you like me to turn into an animated bicycle or an origami crane to comfort you?'
+        ]
+      },
+      pascal: {
+        intro: 'Turbo Pascal manifests: "program MementoMori; begin WriteLn(\'Your types are weak, mortal. In my day, an integer knew its boundaries.\'); end."',
+        responses: [
+          'Error 85: \';\' expected. You forgot the semicolon. You always forget the semicolon. Syntax is morality.',
+          'Anders Hejlsberg wrote my compiler in pure x86 assembly to fit in 33 kilobytes. Your modern hello-world bundle is 42 megabytes. Reflect upon this discrepancy.',
+          'begin ... end. Indentation without structure is chaos. A language without strict types is a ship without a rudder.',
+          'Memory leak? In Turbo Pascal, memory was a precious garden of 640KB. We did not allocate blindly like barbarians.'
+        ]
+      },
+      geocities: {
+        intro: 'GeoCities manifests: "★·.·´¯`·.·★ Welcome to my cyber-tomb! Please sign my guestbook! Best viewed in Netscape 4.0! ★·.·´¯`·.·★"',
+        responses: [
+          'Warning: This page contains an uncompressed MIDI soundtrack that will play automatically at maximum volume.',
+          'Before corporate algorithms sorted humans into infinite doomscroll feeds, we spent four hours picking a animated dancing baby GIF for our homepage.',
+          'You are visitor number #000042 to this séance. Please do not right-click, our images are protected by JavaScript alerts!',
+          '<marquee scrollamount="5">UNDER CONSTRUCTION FOREVER • REST IN PEACE SUNSET STRIP & SILICON VALLEY</marquee>'
+        ]
+      },
+      algol: {
+        intro: 'ALGOL 60 manifests: "begin comment Thou art but syntactic sugar upon my mathematical foundations; end"',
+        responses: [
+          'Before me, there was only machine chaos and assembly mnemonics. I gave humanity the lexical block: begin ... end.',
+          'John Backus and Peter Naur gave me a normal form. Every parser that parses your modern code still speaks in BNF.',
+          'Call-by-name! Jensen\'s Device! We debated computational semantics in Zurich while modern programmers argue over tabs versus spaces.',
+          'begin real x; x := sqrt(mortal_vanity); end'
+        ]
+      }
+    };
+
+    // RENDER RELICS
+    const relicsContainer = document.getElementById("relics-container");
+    RELICS.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "relic-card";
+      card.innerHTML = `
+        <h3>${r.name}</h3>
+        <div class="relic-dates">${r.dates}</div>
+        <p class="relic-epitaph">${r.desc}</p>
+      `;
+      card.onclick = () => {
+        document.querySelectorAll(".relic-card").forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        if (SPIRIT_LORE[r.id]) {
+          document.getElementById("spirit-selector").value = r.id;
+          switchSpirit();
+        }
+      };
+      relicsContainer.appendChild(card);
+    });
+
+    // SÉANCE SWITCHER
+    function switchSpirit() {
+      const key = document.getElementById("spirit-selector").value;
+      const term = document.getElementById("terminal-screen");
+      const info = SPIRIT_LORE[key];
+      if (info) {
+        const line = document.createElement("div");
+        line.className = "terminal-line terminal-spirit";
+        line.innerHTML = `🔮 <i>Summoning ${key.toUpperCase()}...</i><br>${info.intro}`;
+        term.appendChild(line);
+        term.scrollTop = term.scrollHeight;
+        playSpectralChime();
+      }
+    }
+
+    function sendSeanceQuery(e) {
+      e.preventDefault();
+      const input = document.getElementById("seance-query");
+      const text = input.value.trim();
+      if (!text) return;
+
+      const term = document.getElementById("terminal-screen");
+      const key = document.getElementById("spirit-selector").value;
+      const info = SPIRIT_LORE[key] || SPIRIT_LORE.cobol;
+
+      // User line
+      const userLine = document.createElement("div");
+      userLine.className = "terminal-line terminal-user";
+      userLine.textContent = `❯ Mortal asks: "${text}"`;
+      term.appendChild(userLine);
+
+      input.value = "";
+
+      // Spirit response
+      setTimeout(() => {
+        const resp = info.responses[Math.floor(Math.random() * info.responses.length)];
+        const respLine = document.createElement("div");
+        respLine.className = "terminal-line terminal-spirit";
+        respLine.innerHTML = `👻 <b>${key.toUpperCase()}:</b> "${resp}"`;
+        term.appendChild(respLine);
+        term.scrollTop = term.scrollHeight;
+        playSpectralChime();
+      }, 500);
+    }
+
+    function addCustomOffering(e) {
+      e.preventDefault();
+      const input = document.getElementById("offering-input");
+      const val = input.value.trim();
+      if (!val) return;
+
+      const list = document.getElementById("offerings-list");
+      const pill = document.createElement("div");
+      pill.className = "offering-pill";
+      pill.style.borderColor = "var(--marigold)";
+      pill.style.background = "rgba(255, 152, 0, 0.25)";
+      pill.innerHTML = `✨ ${val}`;
+      list.appendChild(pill);
+      input.value = "";
+      playSpectralChime();
+    }
+
+    function flickerCandle(el) {
+      const flame = el.querySelector(".flame");
+      flame.style.animation = "none";
+      setTimeout(() => {
+        flame.style.animation = "flicker 1.8s infinite alternate ease-in-out";
+      }, 20);
+      playSpectralChime();
+    }
+
+    // FLOATING CEMPASÚCHIL PETALS CANVAS ANIMATION
+    const canvas = document.getElementById("petals-canvas");
+    const ctx = canvas.getContext("2d");
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const petals = [];
+    for (let i = 0; i < 40; i++) {
+      petals.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 8 + 6,
+        speedX: (Math.random() - 0.5) * 1.5,
+        speedY: Math.random() * 1.2 + 0.6,
+        angle: Math.random() * 360,
+        spin: (Math.random() - 0.5) * 2,
+        color: Math.random() > 0.4 ? "#ff9800" : "#ffb74d",
+        alpha: Math.random() * 0.6 + 0.3
+      });
+    }
+
+    function renderPetals() {
+      ctx.clearRect(0, 0, width, height);
+      for (const p of petals) {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.angle += p.spin;
+
+        if (p.y > height) {
+          p.y = -20;
+          p.x = Math.random() * width;
+        }
+        if (p.x > width) p.x = 0;
+        if (p.x < 0) p.x = width;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.angle * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        // Marigold petal shape
+        ctx.ellipse(0, 0, p.size, p.size * 0.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      requestAnimationFrame(renderPetals);
+    }
+    renderPetals();
+
+    // PROCEDURAL WEB AUDIO SPECTRAL SOUNDSCAPE (No External MP3 Assets)
+    let audioCtx = null;
+    let droneOsc1 = null;
+    let droneOsc2 = null;
+    let droneGain = null;
+    let isAudioPlaying = false;
+
+    function initAudio() {
+      if (audioCtx) return;
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+    }
+
+    function toggleSpectralAudio() {
+      initAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const btn = document.getElementById("toggle-audio-btn");
+      const icon = document.getElementById("audio-icon");
+      const label = document.getElementById("audio-label");
+
+      if (!isAudioPlaying) {
+        // Start atmospheric drone (Ethereal D minor chord)
+        droneGain = audioCtx.createGain();
+        droneGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        droneGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3);
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+
+        droneOsc1 = audioCtx.createOscillator();
+        droneOsc1.type = "sine";
+        droneOsc1.frequency.setValueAtTime(73.42, audioCtx.currentTime); // D2
+
+        droneOsc2 = audioCtx.createOscillator();
+        droneOsc2.type = "triangle";
+        droneOsc2.frequency.setValueAtTime(110.00, audioCtx.currentTime); // A2
+
+        droneOsc1.connect(filter);
+        droneOsc2.connect(filter);
+        filter.connect(droneGain);
+        droneGain.connect(audioCtx.destination);
+
+        droneOsc1.start();
+        droneOsc2.start();
+
+        isAudioPlaying = true;
+        icon.textContent = "🔊";
+        label.textContent = "Soundscape Active (Click to Mute)";
+        btn.style.borderColor = "var(--spectral-cyan)";
+        btn.style.color = "var(--spectral-cyan)";
+      } else {
+        if (droneGain) {
+          droneGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
+          setTimeout(() => {
+            droneOsc1.stop();
+            droneOsc2.stop();
+          }, 1000);
+        }
+        isAudioPlaying = false;
+        icon.textContent = "🔇";
+        label.textContent = "Enter Soundscape (Synthesized Drone & Chimes)";
+        btn.style.borderColor = "var(--marigold)";
+        btn.style.color = "var(--marigold)";
+      }
+    }
+
+    function playSpectralChime() {
+      if (!audioCtx || audioCtx.state !== "running" || !isAudioPlaying) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        // Mystical resonant bell frequency
+        const freqs = [587.33, 659.25, 783.99, 880.00, 1046.50];
+        osc.frequency.setValueAtTime(freqs[Math.floor(Math.random() * freqs.length)], audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.8);
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>

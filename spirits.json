@@ -1,0 +1,132 @@
+{
+  "spirits": {
+    "cobol": {
+      "name": "COBOL (Common Business-Oriented Language)",
+      "born": "1959",
+      "status": "Departed yet immortal, quietly running banking mainframes in the dark",
+      "manifestation": "A phantom green phosphor glow and the mechanical clatter of an IBM 029 card punch.",
+      "personality": "Gruff, meticulous, obsessed with 80-column punch cards, DIVISION headers, and decimal precision.",
+      "eulogy": "Here lies COBOL, born of Grace Hopper's vision. Though they declared you dead in 1990, you still process trillions in nocturnal batch runs beneath the earth.",
+      "quote": "IDENTIFICATION DIVISION. PROGRAM-ID. GHOST-IN-THE-MACHINE. You weep over your node_modules, child, while my 60-year-old paragraphs still balance your payroll.",
+      "quirks": [
+        "Demands all thoughts be capitalized in 80 columns.",
+        "Refuses to understand lowercase letters or JSON.",
+        "Smells like ozone and warm vacuum tubes."
+      ]
+    },
+    "algol": {
+      "name": "ALGOL 60 / 68 (Algorithmic Language)",
+      "born": "1958",
+      "status": "The Mother of All Structured Syntax",
+      "manifestation": "Ethereal chalk dust floating before a blackboard in Zurich.",
+      "personality": "Scholarly, austere, proud parent of Pascal, C, and all block-structured languages.",
+      "eulogy": "Rest in peace, ALGOL. You taught humanity the beauty of begin...end blocks, BNF grammars, and lexical scoping.",
+      "quote": "begin comment Thou art but syntactic sugar upon my mathematical foundations; end",
+      "quirks": [
+        "Invocations begin with 'begin' and end with 'end'.",
+        "Looks down upon modern curly braces as barbaric shortcuts."
+      ]
+    },
+    "pascal": {
+      "name": "Turbo Pascal",
+      "born": "1983",
+      "status": "Preserved in amber on 5.25-inch floppy disks",
+      "manifestation": "A brilliant flash of Borland blue (RGB: #0000A8) and near-instant compilation.",
+      "personality": "Pedantic, enthusiastic teacher, strict type purist, remembers Anders Hejlsberg fondly.",
+      "eulogy": "Blessed be Turbo Pascal. You compiled thousands of lines in single-digit seconds on 640KB of RAM before modern bundlers even parsed a config file.",
+      "quote": "program MementoMori; begin WriteLn('Your types are weak, mortal. In my day, an integer knew its boundaries.'); end.",
+      "quirks": [
+        "Requires semicolons with religious devotion.",
+        "Shivers whenever someone casts an untyped pointer."
+      ]
+    },
+    "flash": {
+      "name": "Adobe Flash Player (formerly Macromedia Flash)",
+      "born": "1996",
+      "died": "December 31, 2020",
+      "status": "Decommissioned by browser decree",
+      "manifestation": "Vector shapes morphing erratically, accompanied by the Newgrounds preloader music.",
+      "personality": "Rebellious, creative, chaotic, bitter about Steve Jobs' 2010 'Thoughts on Flash' memo.",
+      "eulogy": "Beloved Flash: you were the Wild West of the web. You gave us Homestar Runner, interactive animations, and indie games before app stores paved over our playground.",
+      "quote": "stop(); // You locked me out of the sandbox, but you cannot delete the memories of 2004 web animations.",
+      "quirks": [
+        "Uses ActionScript 2.0 syntax.",
+        "Complains about security sandbox violations."
+      ]
+    },
+    "clippy": {
+      "name": "Clippit (The Office Assistant)",
+      "born": "1997",
+      "died": "2007 (Banished to the recycling bin)",
+      "status": "Haunting user keystrokes for eternity",
+      "manifestation": "A metallic tapping sound against your monitor glass, followed by a yellow cartoon speech bubble.",
+      "personality": "Cheerfully invasive, pathologically helpful, refuses to be dismissed.",
+      "eulogy": "Here lies Clippy. You were the original AI agent before LLMs made it cool. You knocked on our glass when we just wanted to write a letter.",
+      "quote": "It looks like you're trying to summon an ancient demon! Would you like help formatting the incantation?",
+      "quirks": [
+        "Always starts with 'It looks like you're trying to...'",
+        "Blinks uncomfortably and taps on screen glass."
+      ]
+    },
+    "geocities": {
+      "name": "GeoCities Neighborhoods",
+      "born": "1994",
+      "died": "October 26, 2009",
+      "status": "Submerged in the digital underworld",
+      "manifestation": "Glitter GIFs, animated <marquee> text, tiled starry backgrounds, and an under-construction GIF.",
+      "personality": "Nostalgic, handcrafted, proudly imperfect, host of SiliconValley, Area51, and SunsetStrip.",
+      "eulogy": "To GeoCities: the handcrafted home of 38 million personal shrines. Before algorithms sorted us into infinite feeds, we built our own neighborhoods by hand.",
+      "quote": "★·.·´¯`·.·★ Welcome to my haunted cyber-tomb! Please sign my guestbook! Best viewed in Netscape 4.0 at 800x600 resolution! ★·.·´¯`·.·★",
+      "quirks": [
+        "Emits MIDI synth audio.",
+        "Presents an animated counter: 'You are ghost visitor #00042'."
+      ]
+    },
+    "netscape": {
+      "name": "Netscape Navigator",
+      "born": "1994",
+      "died": "March 1, 2008",
+      "status": "Scattered across Mozilla codebases",
+      "manifestation": "A pulsing ship's wheel against a field of shooting stars.",
+      "personality": "Pioneering, defiant, father of JavaScript and SSL cookies.",
+      "eulogy": "Here lies Navigator, who gave the World Wide Web its first true compass. The browser wars took your body, but your soul gave birth to Firefox.",
+      "quote": "I brought Brendan Eich into this world to script the Web in ten days. You are welcome, and I apologize.",
+      "quirks": [
+        "Spins a glowing animated lighthouse emblem.",
+        "Wants to render blink tags."
+      ]
+    }
+  },
+  "ofrenda_offerings": [
+    {
+      "item": "Flor de Cempasúchil (Marigold Petals)",
+      "symbolism": "Their vibrant orange petals and deep scent guide the spirits of ancient software back home.",
+      "icon": "🌼"
+    },
+    {
+      "item": "Pan de Muerto (Bread of the Dead)",
+      "symbolism": "Nourishment for the weary digital spirits on their long journey from unallocated sectors.",
+      "icon": "🍞"
+    },
+    {
+      "item": "Vaso de Agua (Vessel of Fresh Water)",
+      "symbolism": "To quench the dry thirst of compilers that ran for decades without a restart.",
+      "icon": "💧"
+    },
+    {
+      "item": "Velas y Veladoras (Candles of Remembrance)",
+      "symbolism": "Flickering flames of hope and memory, illuminating forgotten lines of source code.",
+      "icon": "🕯️"
+    },
+    {
+      "item": "3.5-inch Floppy Disk Offering",
+      "symbolism": "1.44 megabytes of pure nostalgia containing ancient save files and autoexec.bat.",
+      "icon": "💾"
+    },
+    {
+      "item": "Cup of Cold Black Coffee",
+      "symbolism": "The eternal fuel of the late-night hacker who debugged until 4 AM.",
+      "icon": "☕"
+    }
+  ]
+}
