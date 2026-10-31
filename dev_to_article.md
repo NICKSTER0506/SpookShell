@@ -139,7 +139,8 @@ The full source code is open source under the MIT License on GitHub:
 
 {% github NICKSTER0506/SpookShell %}
 
-Repository: [https://github.com/NICKSTER0506/SpookShell](https://github.com/NICKSTER0506/SpookShell)
+* **GitHub Repository**: [https://github.com/NICKSTER0506/SpookShell](https://github.com/NICKSTER0506/SpookShell)
+* **Author GitHub**: [@NICKSTER0506 (Nagaraj Nikhil RB)](https://github.com/NICKSTER0506)
 
 ---
 
@@ -207,3 +208,8 @@ It made me realize that in tech, we discard frameworks and languages at breaknec
 ## Prize Categories
 
 - **Overall Winner** (Open-Source AI at its core)
+
+---
+
+**Built with 👻 by [Nagaraj Nikhil RB (@NICKSTER0506)](https://github.com/NICKSTER0506)**  
+DEV Profile: [@nikhilrb100](https://dev.to/nikhilrb100)
