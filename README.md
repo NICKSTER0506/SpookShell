@@ -100,8 +100,8 @@ A standalone, zero-dependency browser interface featuring:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/spookshell.git
-cd spookshell
+git clone https://github.com/NICKSTER0506/SpookShell.git
+cd SpookShell
 
 # Make executable
 chmod +x spookshell.py
